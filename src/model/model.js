@@ -1,10 +1,25 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'
+import { validName, validEmail, validPassword } from '../validation/allvalidation.js'
 
 const userSchema = new mongoose.Schema({
-    name:{type:String, required:true,trim:true},
-    name:{type:String, required:true,trim:true, unique:true},
-    name:{type:String, required:true,trim:true},
+    name: {
+        type: String, required: [true, 'Name is Required...'],
+        validate: [validName, "Invalid Name..."], trim: true
+    },
+    email: {
+        type: String, required: [true, 'Email is Required...'],
+        validate: [validEmail, "Invalid Email..."], trim: true, unique: true
+    },
+    password: {
+        type: String, required: [true, 'Password is Required...'],
+        validate: [validPassword, "Invalid Password..."], trim: true
+    },
 },
-{timestamps:true}
+    { timestamps: true }
 )
-export const user_model= mongoose.model('user',userSchema)
+
+userSchema.pre('save', async function () {this.password = await bcrypt.hash(this.password, 10);});
+
+
+export const user_model = mongoose.model('user', userSchema)

@@ -14,11 +14,10 @@
   "author": "simran",
   "type": "module",
   "main": "index.js",
-  
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx nodemon src/index.js",
-    "dev":"npx nodemon src/index.js"
+    "dev": "npx nodemon src/index.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

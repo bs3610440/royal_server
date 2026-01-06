@@ -1,20 +1,19 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import cors from 'cors';
 import routes from './routes/routes.js';
+import dotenv from 'dotenv';
 
 const  app = express()
 
 const PORT = 8080
-const MongoDBUrl = "mongodb+srv://bs3610440_db_user:eoccCnbn4y4G5iMd@cluster0.dzmqjdg.mongodb.net/databaseroyal"
 
 
 dotenv.config()
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect(MongoDBUrl)
+mongoose.connect(process.env.MongoDB)
 .then(()=>console.log("MongoDB connected"))
 .catch((err)=>console.log("MongoDB Error=> ",err.message))
 
