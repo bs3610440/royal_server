@@ -1,6 +1,5 @@
 export const validName = (name) => {
     const nameRegex = /^[A-Za-z][A-Za-z' -]{1,49}$/
-
     return nameRegex.test(name)
 }
 export const validEmail = (email) => {

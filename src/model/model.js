@@ -15,11 +15,17 @@ const userSchema = new mongoose.Schema({
         type: String, required: [true, 'Password is Required...'],
         validate: [validPassword, "Invalid Password..."], trim: true
     },
+    verification: {
+        userOtp: { type: Number, required: true, default: 0 },
+        optExipre: { type: Number, required: true, default: 0 },
+        isDelete: { type: Boolean, required: true, default: false },
+        isVerified: { type: Boolean, required: true, default: false },
+    },
 },
     { timestamps: true }
 )
 
-userSchema.pre('save', async function () {this.password = await bcrypt.hash(this.password, 10);});
+userSchema.pre('save', async function () { this.password = await bcrypt.hash(this.password, 10); });
 
 
 export const user_model = mongoose.model('user', userSchema)
