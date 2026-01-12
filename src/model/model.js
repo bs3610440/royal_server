@@ -11,7 +11,7 @@ const deviceSchema = new mongoose.Schema({
     location: String,
     lastLogin: { type: Date, default: Date.now },
     isActive: { type: Boolean, default: true }
-}, { timestamps: true })
+}, { timestamps: true })     
 
 const userSchema = new mongoose.Schema({
     name: {
