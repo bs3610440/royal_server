@@ -1,5 +1,6 @@
 import { user_model } from '../model/model.js'
 import { errorhandling } from '../middleware/all_error.js'
+import { sendUserOtpMail } from '../mail/mail.js'
 export const create_user = async (req, res) => {
     try {
         const data = req.body
@@ -11,18 +12,22 @@ export const create_user = async (req, res) => {
         if (checkUser) {
             const { isDelete, isVerified } = checkUser.verification
             if (isDelete) return res.status(400).send({ status: false, msg: "user already deleted" })
-            if (isVerified) return res.status(400).send({ status: false, msg: "user already verified" })
+            if (isVerified) return res.status(400).send({ status: false, msg: "user already verified pls LogIn" })
 
             await user_model.findOneAndUpdate({ email: data.email },
-                { verification: { userOtp: userOtp, optExipre: optExipre } }, { new: true })
-            return res.status(200).send({ status: true, msg: "succesfully Send new Otp" })
+                { $set: { verification: { userOtp: userOtp, optExipre: optExipre } } }, { new: true })
+            const userDb = { _id: checkUser._id, name: checkUser.name, email: checkUser.email, }
+            sendUserOtpMail(checkUser.email, checkUser.name, userOtp)
+            return res.status(200).send({ status: true, msg: "succesfully Send new Otp", userDb })
         }
         const verification = { userOtp: userOtp, optExipre: optExipre }
 
         data.verification = verification
         const DB = await user_model.create(data)
         const userDb = { _id: DB._id, name: DB.name, email: DB.email, }
+        sendUserOtpMail(DB.email, DB.name, userOtp)
         res.status(201).send({ status: true, msg: "user created succesfully", userDb })
     }
     catch (err) { errorhandling(err, res) }
 }
+

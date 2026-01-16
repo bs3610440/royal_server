@@ -2,16 +2,6 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt'
 import { validName, validEmail, validPassword } from '../validation/allvalidation.js'
 
-const deviceSchema = new mongoose.Schema({
-    deviceId: { type: String, required: true },
-    deviceType: { type: String, enum: ['mobile', 'tablet', 'browser'], required: true },
-    browser: String,
-    os: String,
-    ipAddress: String,
-    location: String,
-    lastLogin: { type: Date, default: Date.now },
-    isActive: { type: Boolean, default: true }
-}, { timestamps: true })     
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -27,12 +17,11 @@ const userSchema = new mongoose.Schema({
         validate: [validPassword, "Invalid Password..."], trim: true
     },
     verification: {
-        userOtp: { type: Number, required: true, default: 0 },
+        userOtp: { type: Number, required: true, default: 0 }, 
         optExipre: { type: Number, required: true, default: 0 },
         isDelete: { type: Boolean, required: true, default: false },
         isVerified: { type: Boolean, required: true, default: false },
     },
-    NoOfLoginDevice: deviceSchema
 },
     { timestamps: true }
 )
