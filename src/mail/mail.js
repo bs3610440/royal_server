@@ -34,3 +34,4 @@ export const sendUserOtpMail = async (email,name,otp) => {
         console.log(err.message)
     }
 }
+   

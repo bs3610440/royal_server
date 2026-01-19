@@ -4,6 +4,7 @@ import { validName, validEmail, validPassword } from '../validation/allvalidatio
 
 
 const userSchema = new mongoose.Schema({
+    profileImg:{type:Object},
     name: {
         type: String, required: [true, 'Name is Required...'],
         validate: [validName, "Invalid Name..."], trim: true
