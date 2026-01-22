@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema({
         type: String, required: [true, 'Email is Required...'],
         validate: [validEmail, "Invalid Email..."], trim: true, unique: true
     },
+    gender:{
+        type:String, enum:['male','female','other'],trim:true,required:true
+    },
     password: {
         type: String, required: [true, 'Password is Required...'],
         validate: [validPassword, "Invalid Password..."], trim: true

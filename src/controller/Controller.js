@@ -12,6 +12,7 @@ export const create_user = async (req, res) => {
 
 
         const checkUser = await user_model.findOne({ email: data.email })
+
         if (checkUser) {
             const { isDelete, isVerified } = checkUser.verification
             if (isDelete) return res.status(400).send({ status: false, msg: "user already deleted" })
@@ -31,12 +32,51 @@ export const create_user = async (req, res) => {
         if (img) {
             data.profileImg = await uploadProfileImg(img.path)
         }
-        console.log(data)
+
         const DB = await user_model.create(data)
         const userDb = { _id: DB._id, name: DB.name, email: DB.email, profileImg: DB.profileImg }
         sendUserOtpMail(DB.email, DB.name, userOtp)
         res.status(201).send({ status: true, msg: "user created succesfully", userDb })
     }
     catch (err) { errorhandling(err, res) }
+}
+
+
+export const user_otp_verification = async (req, res) => {
+    try {
+        const id = req.params.id
+        const otp = req.body.otp
+        if (!id) return res.status(400).send({ status: false, msg: "id is required" })
+        if (!otp) return res.status(400).send({ status: false, msg: "otp is required" })
+
+        const user = await user_model.findById(id)
+
+        if (!user) return res.status(404).send({ status: false, msg: "user not found" })
+        if (user) {
+            const { isDelete, isVerified, optExipre, userOtp } = user.verification
+
+            if (isDelete) return res.status(400).send({ status: false, msg: "Account Deleted!" })
+            if (isVerified) return res.status(400).send({ status: false, msg: "Account Already Verify Pls LogIn!" })
+
+            if (Date.now() >= optExipre) return res.status(400).send({ status: false, msg: "Otp Expire" })
+            if (parseInt(otp) !== parseInt(userOtp)) return res.status(400).send({ status: false, msg: "Wrong Otp" })
+
+            await user_model.findOneAndUpdate(
+                { email: user.email },
+                { $set: { 'verification.optExipre': null, 'verification.userOtp': null, 'verification.isVerified': true, } }
+            )
+            res.status(200).send({ status: true, msg: 'Verify Otp' })
+        }
+
+    }
+    catch (e) { errorhandling(e, res) }
+}
+
+
+export const user_log_in = async (req, res) => {
+    try {
+
+    }
+    catch (e) { errorhandling(e, res) }
 }
 
