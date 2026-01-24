@@ -2,6 +2,9 @@ import { user_model } from '../model/model.js'
 import { errorhandling } from '../middleware/all_error.js'
 import { sendUserOtpMail } from '../mail/mail.js'
 import { uploadProfileImg } from '../image/Image.js'
+import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+
 export const create_user = async (req, res) => {
     try {
         const data = req.body
@@ -76,7 +79,31 @@ export const user_otp_verification = async (req, res) => {
 export const user_log_in = async (req, res) => {
     try {
 
+        const data = req.body
+
+        const { email, password } = data
+
+        if (!email) return res.status(400).send({ status: false, msg: "email is required!" })
+        if (!password) return res.status(400).send({ status: false, msg: "PASSWORD IS REQUIRED!" })
+
+        const DB = await user_model.findOne({ email: email })
+        if (!DB) return res.status(400).send({ status: false, msg: "User not found!" })
+
+        if (DB) {
+            const { isDelete, isVerified } = DB.verification
+            if (isDelete) return res.status(400).send({ status: false, msg: "Account Deleted!" })
+            if (!isVerified) return res.status(400).send({ status: false, msg: "Pls verify otp" })
+        }
+
+        const comparePasswod = await bcrypt.compare(password, DB.password)
+
+        if (!comparePasswod) return res.status(400).send({ status: false, msg: "wrong password" })
+
+        const token = jwt.sign({ userId: DB._id }, process.env.UserToken, { expiresIn: '1d' })
+        res.status(200).send({ status: true, msg: "Login Successfully", token, id: DB._id })
+
     }
     catch (e) { errorhandling(e, res) }
 }
+
 
