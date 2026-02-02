@@ -13,25 +13,28 @@ import DashBoard from './components/DashBoard/HomeBashBoard.jsx'
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
+    <div className='bg-white dark:from-zinc-900 h-full'>
 
-        {/* Public Routes  */}
-        <Route path="/" element={<Home />} />
-        <Route path="/create-account" element={<SignUp />} />
-        <Route path="/user-login" element={<Log />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="*" element={<PageNotFound />} />
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
 
-        {/* Private Routes  */}
-        <Route path="/otp" element={<Otp />} />
-        <Route path="/dashBoard" element={<DashBoard />} />
+          {/* Public Routes  */}
+          <Route path="/" element={<Home />} />
+          <Route path="/create-account" element={<SignUp />} />
+          <Route path="/user-login" element={<Log />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="*" element={<PageNotFound />} />
 
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+          {/* Private Routes  */}
+          <Route path="/otp" element={<Otp />} />
+          <Route path="/dashBoard" element={<DashBoard />} />
+
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </div>
 
   )
 }
