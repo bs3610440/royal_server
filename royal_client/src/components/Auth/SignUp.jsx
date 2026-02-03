@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import axios from 'axios';
-import { 
-  FaUser, 
-  FaEnvelope, 
-  FaVenusMars, 
-  FaLock, 
-  FaEye, 
-  FaEyeSlash, 
+import {
+  FaUser,
+  FaEnvelope,
+  FaVenusMars,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
   FaCheckCircle,
   FaTimes,
   FaFilm
@@ -15,7 +15,7 @@ import {
 import { FcGoogle } from 'react-icons/fc';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import {validationSignSchema} from '../Validation/AllValidation'
+import { validationSignSchema } from '../Validation/AllValidation'
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -33,19 +33,19 @@ const SignUp = () => {
       confirmPassword: '',
       agreeTerms: false
     },
-    validationSchema:validationSignSchema,
+    validationSchema: validationSignSchema,
     onSubmit: async (values, { resetForm }) => {
       setIsSubmitting(true);
       setSubmitError('');
-      
+
       try {
-        
-        
-      
-      } 
+
+
+
+      }
       catch (error) {
-       
-      } 
+
+      }
       finally {
         setIsSubmitting(false);
       }
@@ -116,8 +116,8 @@ const SignUp = () => {
               className="w-full h-195 object-cover"
               src="https://res.cloudinary.com/dxa0dfaes/video/upload/v1770022909/tiny_f9zsg1.mp4"
             />
-            
-           
+
+
           </div>
 
           {/* Right Section - Form */}
@@ -127,7 +127,7 @@ const SignUp = () => {
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   Create Your Account
                 </h1>
-               
+
               </div>
 
               {/* Success Message */}
@@ -184,12 +184,12 @@ const SignUp = () => {
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {field.label}
                     </label>
-                    
+
                     <div className="relative">
                       <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                         <field.icon />
                       </div>
-                      
+
                       {field.type === 'select' ? (
                         <select
                           id={field.id}
@@ -197,11 +197,10 @@ const SignUp = () => {
                           value={formik.values[field.id]}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          className={`w-full pl-12 pr-4 py-3 rounded-xl border ${
-                            formik.touched[field.id] && formik.errors[field.id]
+                          className={`w-full pl-12 pr-4 py-3 rounded-xl border ${formik.touched[field.id] && formik.errors[field.id]
                               ? 'border-red-500 dark:border-red-500'
                               : 'border-gray-300 dark:border-zinc-700'
-                          } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
+                            } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
                         >
                           {field.options.map((option) => (
                             <option key={option.value} value={option.value}>
@@ -219,24 +218,23 @@ const SignUp = () => {
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             placeholder={field.placeholder}
-                            className={`w-full pl-12 pr-12 py-3 rounded-xl border ${
-                              formik.touched[field.id] && formik.errors[field.id]
+                            className={`w-full pl-12 pr-12 py-3 rounded-xl border ${formik.touched[field.id] && formik.errors[field.id]
                                 ? 'border-red-500 dark:border-red-500'
                                 : 'border-gray-300 dark:border-zinc-700'
-                            } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
+                              } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
                           />
-                          
+
                           {field.showToggle && (
                             <button
                               type="button"
-                              onClick={() => 
-                                field.id === 'password' 
+                              onClick={() =>
+                                field.id === 'password'
                                   ? setShowPassword(!showPassword)
                                   : setShowConfirmPassword(!showConfirmPassword)
                               }
                               className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                             >
-                              {field.id === 'password' ? 
+                              {field.id === 'password' ?
                                 (showPassword ? <FaEyeSlash /> : <FaEye />) :
                                 (showConfirmPassword ? <FaEyeSlash /> : <FaEye />)
                               }
@@ -245,7 +243,7 @@ const SignUp = () => {
                         </div>
                       )}
                     </div>
-                    
+
                     {formik.touched[field.id] && formik.errors[field.id] && (
                       <motion.p
                         initial={{ opacity: 0, y: -5 }}
@@ -258,17 +256,16 @@ const SignUp = () => {
                   </div>
                 ))}
 
-              
+
 
                 {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 ${
-                    isSubmitting
+                  className={`w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 ${isSubmitting
                       ? 'bg-red-400 cursor-not-allowed'
                       : 'bg-red-600 hover:bg-red-700 active:scale-95'
-                  } shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40`}
+                    } shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40`}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">
@@ -280,15 +277,15 @@ const SignUp = () => {
                   )}
                 </button>
 
-               
 
-              
+
+
 
                 {/* Login Link */}
                 <p className="text-center text-gray-600 dark:text-gray-400 mt-8">
                   Already have an account?{' '}
                   <Link
-                    to="/login"
+                    to="/user-login"
                     className="text-red-600 dark:text-red-400 font-semibold hover:underline"
                   >
                     Sign In
