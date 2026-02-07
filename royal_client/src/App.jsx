@@ -1,14 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar/Navbar.jsx'
-import Home from './components/Home/Home.jsx'
-import SignUp from './components/Auth/SignUp.jsx'
-import Log from './components/Auth/LogIn.jsx'
-import Blog from './components/Blog/Blogs.jsx'
-import PageNotFound from './components/PNF.jsx'
-import Footer from './components/Footer.jsx'
-import ContactUs from './components/ContactUs.jsx'
-import Otp from './components/OtpVerifcation/Otp.jsx'
-import DashBoard from './components/DashBoard/HomeBashBoard.jsx'
+import { Navbar, Home, SignUp, Log, Blog, PageNotFound, Footer, ContactUs, Otp, DashBoard } from './AllComponents.js'
 
 
 export default function App() {
@@ -28,7 +19,7 @@ export default function App() {
           <Route path="*" element={<PageNotFound />} />
 
           {/* Private Routes  */}
-          <Route path="/otp" element={<Otp />} />
+          <Route path="/otp/:type/:userid" element={<Otp />} />
           <Route path="/dashBoard" element={<DashBoard />} />
 
         </Routes>

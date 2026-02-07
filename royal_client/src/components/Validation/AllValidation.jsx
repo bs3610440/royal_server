@@ -23,8 +23,6 @@ export const validationSignSchema = Yup.object({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Please confirm your password'),
-  agreeTerms: Yup.boolean()
-    .oneOf([true], 'You must accept the terms and conditions')
 });
 
 export const validationLoginSchema = Yup.object({

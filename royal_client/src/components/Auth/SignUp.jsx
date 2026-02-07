@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import axios from 'axios';
-import {
-  FaUser,
-  FaEnvelope,
-  FaVenusMars,
-  FaLock,
-  FaEye,
-  FaEyeSlash,
-  FaCheckCircle,
-  FaTimes,
-  FaFilm
-} from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
+import { FaUser, FaEnvelope, FaVenusMars, FaLock, FaEye, FaEyeSlash, FaCheckCircle, FaTimes } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { validationSignSchema } from '../Validation/AllValidation'
+import axios from 'axios';
+import { LocalUrl } from '../../GlobalUrl'
+import { useNavigate } from 'react-router-dom'
+import { showErrorToast, showSuccessToast } from '../Notification/ToastNofication'
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -23,28 +15,34 @@ const SignUp = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
+  const navigate = useNavigate()
 
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      gender: '',
-      password: '',
-      confirmPassword: '',
-      agreeTerms: false
-    },
+    initialValues: { name: '', email: '', gender: '', password: '', confirmPassword: '' },
     validationSchema: validationSignSchema,
-    onSubmit: async (values, { resetForm }) => {
+
+    onSubmit: async (values) => {
       setIsSubmitting(true);
       setSubmitError('');
 
       try {
+        const response = await axios.post(`${LocalUrl}create_user`, values)
 
-
+        if (response.status == 200 || response.status == 201) {
+          showSuccessToast(response?.data?.msg || 'Sucessfully Create User')
+          localStorage.setItem('email', response?.data?.userDb?.email)
+          navigate(`/otp/user_otp_verification/${response.data.userDb._id}`)
+        }
 
       }
       catch (error) {
-
+        if (error?.response?.data?.msg == 'user already verified pls LogIn') {
+          navigate('/user-login')
+          showSuccessToast(error.response?.data?.msg || "server error")
+        }
+        else {
+          showErrorToast(error?.response?.data?.msg || 'Server error')
+        }
       }
       finally {
         setIsSubmitting(false);
@@ -198,8 +196,8 @@ const SignUp = () => {
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           className={`w-full pl-12 pr-4 py-3 rounded-xl border ${formik.touched[field.id] && formik.errors[field.id]
-                              ? 'border-red-500 dark:border-red-500'
-                              : 'border-gray-300 dark:border-zinc-700'
+                            ? 'border-red-500 dark:border-red-500'
+                            : 'border-gray-300 dark:border-zinc-700'
                             } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
                         >
                           {field.options.map((option) => (
@@ -219,8 +217,8 @@ const SignUp = () => {
                             onBlur={formik.handleBlur}
                             placeholder={field.placeholder}
                             className={`w-full pl-12 pr-12 py-3 rounded-xl border ${formik.touched[field.id] && formik.errors[field.id]
-                                ? 'border-red-500 dark:border-red-500'
-                                : 'border-gray-300 dark:border-zinc-700'
+                              ? 'border-red-500 dark:border-red-500'
+                              : 'border-gray-300 dark:border-zinc-700'
                               } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
                           />
 
@@ -263,8 +261,8 @@ const SignUp = () => {
                   type="submit"
                   disabled={isSubmitting}
                   className={`w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 ${isSubmitting
-                      ? 'bg-red-400 cursor-not-allowed'
-                      : 'bg-red-600 hover:bg-red-700 active:scale-95'
+                    ? 'bg-red-400 cursor-not-allowed'
+                    : 'bg-red-600 hover:bg-red-700 active:scale-95'
                     } shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40`}
                 >
                   {isSubmitting ? (
@@ -300,4 +298,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignUp; 

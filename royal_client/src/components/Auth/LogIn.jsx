@@ -12,24 +12,45 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { validationLoginSchema } from '../Validation/AllValidation';
+import { LocalUrl } from '../../GlobalUrl'
+import { useNavigate } from 'react-router-dom'
+import { showErrorToast, showSuccessToast } from '../Notification/ToastNofication'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const navigate = useNavigate();
   const formik = useFormik({
-    initialValues: {email: '',password: ''},
+    initialValues: { email: '', password: '' },
     validationSchema: validationLoginSchema,
     onSubmit: async (values) => {
       setIsSubmitting(true);
-      
+
       try {
-        console.log(values)
-        
-        // Redirect logic here
-      } 
+        const response = await axios.post(`${LocalUrl}user_log_in`, values)
+
+        if (response.status == 200) {
+          showSuccessToast(response?.data?.msg || 'Sucessfully log In')
+          localStorage.setItem('userId', response?.data?.id)
+          localStorage.setItem('userToken', response?.data?.token)
+          navigate(`/`)
+        }
+      }
       catch (error) {
-        
+        if (error?.response?.data?.msg == 'Pls verify otp') {
+          console.log(error.response.data.id)
+          localStorage.setItem('email', error?.response?.data?.email)
+          navigate(`/otp/user_otp_verification/${error?.response?.data?.id}`)
+          showSuccessToast(error.response?.data?.msg || "server error")
+        }
+        else if (error?.response?.data?.msg == 'User not found!') {
+
+          navigate(`/create-account`)
+          showErrorToast(error.response?.data?.msg || "server error")
+        }
+        else {
+          showErrorToast(error?.response?.data?.msg || 'Server error')
+        }
       }
       finally {
         setIsSubmitting(false);
@@ -87,7 +108,7 @@ const Login = () => {
               </div>
 
               <form onSubmit={formik.handleSubmit} className="space-y-5">
-                {formFields.map((field  ) => (
+                {formFields.map((field) => (
                   <div key={field.id}>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       {field.label}
@@ -106,11 +127,10 @@ const Login = () => {
                         value={formik.values[field.id]}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        className={`w-full pl-12 pr-12 py-3 rounded-xl border ${
-                          formik.touched[field.id] && formik.errors[field.id]
+                        className={`w-full pl-12 pr-12 py-3 rounded-xl border ${formik.touched[field.id] && formik.errors[field.id]
                             ? 'border-red-500 dark:border-red-500'
                             : 'border-gray-300 dark:border-zinc-700'
-                        } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
+                          } bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all`}
                       />
 
                       {field.showToggle && (
@@ -135,14 +155,14 @@ const Login = () => {
                     )}
                   </div>
                 ))}
-                       
+
                 <div className="flex items-center justify-between text-sm">
                   <label className="flex items-center gap-2 text-gray-600 dark:text-gray-400 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       name="rememberMe"
                       onChange={formik.handleChange}
-                      className="rounded border-gray-300 text-red-600 focus:ring-red-500" 
+                      className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                     />
                     Remember me
                   </label>
@@ -154,11 +174,10 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 ${
-                    isSubmitting
+                  className={`w-full py-3.5 px-4 rounded-xl font-semibold text-white transition-all duration-300 ${isSubmitting
                       ? 'bg-red-400 cursor-not-allowed'
                       : 'bg-red-600 hover:bg-red-700 active:scale-95'
-                  } shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40`}
+                    } shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40`}
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center gap-2">

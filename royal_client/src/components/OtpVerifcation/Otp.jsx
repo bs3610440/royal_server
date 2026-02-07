@@ -3,7 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaCheckCircle, FaClock, FaArrowLeft, FaShieldAlt } from "react-icons/fa";
 import { showSuccessToast, showErrorToast } from '../Notification/ToastNofication';
-
+import axios from 'axios'
+import {LocalUrl} from '../../GlobalUrl'
 const OtpVerification = () => {
  
   const [code, setCode] = useState(new Array(4).fill(""));
@@ -12,6 +13,8 @@ const OtpVerification = () => {
   const [canResend, setCanResend] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(0);
 
+  const email = (localStorage.getItem('email') || 'test@gmail.com')
+  const {userid,type} = useParams()
   // Refs for Input Management
   const inputRefs = useRef([]);
 
@@ -56,7 +59,6 @@ const OtpVerification = () => {
 
   // Handle Backspace
   const handleKeyDown = (e, index) => {
-    console.log(e.key)
     if (e.key === "Backspace"  && !code[index] && index > 0) {
       inputRefs.current[index - 1].focus();
     }
@@ -108,12 +110,27 @@ const OtpVerification = () => {
     setIsLoading(true);
 
     try {
-      setInterval(() => {
-        showSuccessToast("Account verified successfully!");
-      },2000);
-      // navigate('/dashboard');
+     console.log(userOtp)
+     console.log(userid)
+
+     if(type=='otp_verification'){
+      const response = await axios.post(`${LocalUrl}user_otp_verification/${userid}`,{otp:userOtp}) 
+
+     if(response.status==200){
+      showSuccessToast(response?.data?.msg || 'Sucessfully Verify Otp')
+      navigate('/user-login')
+     }
+     }
+
+     
     } catch (err) {
-      showErrorToast(err.response?.data?.msg || "Verification failed");
+      if(err?.response?.data?.msg=='Account Already Verify Pls LogIn!'){
+        showSuccessToast(err.response?.data?.msg || "server error")
+        navigate('/user-login')
+      }
+      else{
+        showErrorToast(err.response?.data?.msg || "Verification failed");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -153,7 +170,7 @@ const OtpVerification = () => {
             <p className="text-sm text-gray-500">Enter the code sent to:</p>
             <div className="inline-flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-full border border-blue-100">
               <FaEnvelope className="text-blue-600 text-xs" />
-              <span className="font-semibold text-gray-700 dark:text-gray-200 text-xs">test</span>
+              <span className="font-semibold text-gray-700 dark:text-gray-200 text-xs">{email}</span>
             </div>
           </div>
 

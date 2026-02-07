@@ -13,7 +13,6 @@ export const create_user = async (req, res) => {
         const optExipre = Date.now() + 5 * 60 * 1000
 
 
-
         const checkUser = await user_model.findOne({ email: data.email })
 
         if (checkUser) {
@@ -49,6 +48,8 @@ export const user_otp_verification = async (req, res) => {
     try {
         const id = req.params.id
         const otp = req.body.otp
+
+
         if (!id) return res.status(400).send({ status: false, msg: "id is required" })
         if (!otp) return res.status(400).send({ status: false, msg: "otp is required" })
 
@@ -92,7 +93,7 @@ export const user_log_in = async (req, res) => {
         if (DB) {
             const { isDelete, isVerified } = DB.verification
             if (isDelete) return res.status(400).send({ status: false, msg: "Account Deleted!" })
-            if (!isVerified) return res.status(400).send({ status: false, msg: "Pls verify otp" })
+            if (!isVerified) return res.status(400).send({ status: false, id: DB._id, email: DB.email, msg: "Pls verify otp" })
         }
 
         const comparePasswod = await bcrypt.compare(password, DB.password)
