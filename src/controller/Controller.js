@@ -34,7 +34,7 @@ export const create_user = async (req, res) => {
         if (img) {
             data.profileImg = await uploadProfileImg(img.path)
         }
-
+        data.role = 'user'
         const DB = await user_model.create(data)
         const userDb = { _id: DB._id, name: DB.name, email: DB.email, profileImg: DB.profileImg }
         sendUserOtpMail(DB.email, DB.name, userOtp)
@@ -42,8 +42,6 @@ export const create_user = async (req, res) => {
     }
     catch (err) { errorhandling(err, res) }
 }
-
-
 export const user_otp_verification = async (req, res) => {
     try {
         const id = req.params.id
@@ -75,8 +73,6 @@ export const user_otp_verification = async (req, res) => {
     }
     catch (e) { errorhandling(e, res) }
 }
-
-
 export const user_log_in = async (req, res) => {
     try {
 
@@ -87,7 +83,7 @@ export const user_log_in = async (req, res) => {
         if (!email) return res.status(400).send({ status: false, msg: "email is required!" })
         if (!password) return res.status(400).send({ status: false, msg: "PASSWORD IS REQUIRED!" })
 
-        const DB = await user_model.findOne({ email: email })
+        const DB = await user_model.findOne({ email: email, role:"user" })
         if (!DB) return res.status(400).send({ status: false, msg: "User not found!" })
 
         if (DB) {
@@ -106,5 +102,66 @@ export const user_log_in = async (req, res) => {
     }
     catch (e) { errorhandling(e, res) }
 }
+export const resenOtp = async (req, res) => {
+    try {
+        const { id } = req.query
+        if (!id) return res.status(400).send({ status: false, msg: "id is required" })
 
+        const DB = await user_model.findById(id)
+        if (!DB) return res.status(404).send({ status: false, msg: "user not found" })
 
+        const randomOtp = Math.floor(Math.random() * 10000)
+        const expirydate = Date.now() + 300000
+        const { isDelete, isVerified } = DB.verification
+
+        if (isDelete) return res.status(400).send({ status: false, msg: "Account Deleted!" })
+        if (isVerified) return res.status(400).send({ status: false, msg: "Account Already Verify Pls LogIn!" })
+
+        await user_model.findOneAndUpdate(
+            { email: DB.email },
+            { $set: { 'verification.optExipre': expirydate, 'verification.userOtp': randomOtp } },
+        )
+        sendUserOtpMail(DB.email, DB.name, randomOtp)
+        res.status(200).send({ status: true, msg: "succesfully Send new Otp" })
+    }
+    catch (e) { errorhandling(e, res) }
+}
+export const login_with_google = async (req, res) => {
+    try {
+
+    }
+    catch (e) { errorhandling(e, res) }
+
+}
+export const updated_profile = async (req, res) => {
+    try {
+
+    
+
+    }
+    catch (e) { errorhandling(e, res) }
+
+}
+export const delete_profile = async (req, res) => {
+    try {
+
+    }
+    catch (e) { errorhandling(e, res) }
+
+}
+export const change_password = async (req, res) => {
+    try {
+
+    }
+    catch (e) { errorhandling(e, res) }
+
+}
+export const change_profile_img = async (req, res) => {
+    try {
+
+    }
+    catch (e) { errorhandling(e, res) }
+
+}
+
+  

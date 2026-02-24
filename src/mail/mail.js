@@ -15,7 +15,6 @@ const transporter = nodemailer.createTransport({
 
 export const sendUserOtpMail = async (email,name,otp) => {
     try {
-
         
         const info = await transporter.sendMail({
             from: 'Ravi Singh job ',
