@@ -1,5 +1,4 @@
 import express from 'express'
-import { authentication, authorization } from '../middleware/auth.js'
 import multer from 'multer'
 
 const routes = express.Router()
@@ -16,8 +15,10 @@ routes.put('/updated_profile/:id', authentication, authorization, updated_profil
 
 // Admin API's
 import { admin_log_in, get_all_user } from '../controller/admin_controller.js'
+import { authentication, authorization } from '../middleware/admin_auth.js'
+
 routes.post('/admin_log_in', admin_log_in)
-routes.get('/get_all_user', get_all_user)
+routes.get('/get_all_user',authentication, get_all_user)
 
 export default routes
 
