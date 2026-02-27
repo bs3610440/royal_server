@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt'
 import { validName, validEmail, validPassword } from '../validation/allvalidation.js'
+import { uploadProfileImg } from '../image/Image.js'
 
 
 const userSchema = new mongoose.Schema({
@@ -33,7 +34,12 @@ const userSchema = new mongoose.Schema({
     { timestamps: true }
 )
 
-userSchema.pre('save', async function () { this.password = await bcrypt.hash(this.password, 10); });
+userSchema.pre('save', async function () { 
+    if(this.profileImg){
+        this.profileImg = await uploadProfileImg(this.profileImg.path)
+    }
+    this.password = await bcrypt.hash(this.password, 10); 
+});
 
 
 export const user_model = mongoose.model('user', userSchema)

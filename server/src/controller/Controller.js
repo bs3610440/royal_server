@@ -1,7 +1,6 @@
 import { user_model } from '../model/model.js'
 import { errorhandling } from '../middleware/all_error.js'
 import { sendUserOtpMail } from '../mail/mail.js'
-import { uploadProfileImg } from '../image/Image.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
@@ -30,10 +29,9 @@ export const create_user = async (req, res) => {
 
         data.verification = verification
 
-
-        if (img) {
-            data.profileImg = await uploadProfileImg(img.path)
-        }
+        data.profileImg = img
+       
+       
         data.role = 'user'
         const DB = await user_model.create(data)
         const userDb = { _id: DB._id, name: DB.name, email: DB.email, profileImg: DB.profileImg }

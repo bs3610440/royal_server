@@ -12,7 +12,6 @@ cloudinary.config({
 
 export const uploadProfileImg = async (img) => {
   try {
-    
    const optimizedBuffer = await sharp(img)
             .resize(1080, 720, { fit: 'inside', withoutEnlargement: true })
             .jpeg({ quality: 80, mozjpeg: true }).toBuffer();
