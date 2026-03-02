@@ -3,6 +3,7 @@ import { errorhandling } from '../middleware/all_error.js'
 import { sendUserOtpMail } from '../mail/mail.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import {validName} from '../validation/allvalidation.js'
 
 export const create_user = async (req, res) => {
     try {
@@ -30,8 +31,8 @@ export const create_user = async (req, res) => {
         data.verification = verification
 
         data.profileImg = img
-       
-       
+
+
         data.role = 'user'
         const DB = await user_model.create(data)
         const userDb = { _id: DB._id, name: DB.name, email: DB.email, profileImg: DB.profileImg }
@@ -81,7 +82,7 @@ export const user_log_in = async (req, res) => {
         if (!email) return res.status(400).send({ status: false, msg: "email is required!" })
         if (!password) return res.status(400).send({ status: false, msg: "PASSWORD IS REQUIRED!" })
 
-        const DB = await user_model.findOne({ email: email, role:"user" })
+        const DB = await user_model.findOne({ email: email, role: "user" })
         if (!DB) return res.status(400).send({ status: false, msg: "User not found!" })
 
         if (DB) {
@@ -131,10 +132,24 @@ export const login_with_google = async (req, res) => {
     catch (e) { errorhandling(e, res) }
 
 }
+
+
 export const updated_profile = async (req, res) => {
     try {
 
-    
+        const id = req.params.id
+        const name = req.body.name
+
+        let updated = {}
+
+        if (name) {
+            if (!validName(name)) return res.status(400).send({ status: false, msg: "Name Invalid" })
+            updated = { $set: { name: name, } }
+        }
+
+        const Up = await user_model.findByIdAndUpdate(id, updated, { new: true })
+
+        res.status(200).send({ status: true, msg: "Profile Updated Successfully", Up })
 
     }
     catch (e) { errorhandling(e, res) }
@@ -142,7 +157,18 @@ export const updated_profile = async (req, res) => {
 }
 export const delete_profile = async (req, res) => {
     try {
+        const id = req.params.id
 
+        const DB = await user_model.findById(id)
+
+        if (!DB) return res.status(404).send({ status: false, msg: 'user not found pls SignUp Account' })
+        if (DB.verification.isDelete) return res.status(404).send({ status: false, msg: 'Account Already Deleted...' })
+        await user_model.findByIdAndUpdate(
+            { _id: id },
+            { $set: { 'verification.isDelete': true } },
+        )
+
+        res.status(200).send({ status: true, msg: 'Account Deleted Successfully' })
     }
     catch (e) { errorhandling(e, res) }
 
@@ -162,4 +188,3 @@ export const change_profile_img = async (req, res) => {
 
 }
 
-  
