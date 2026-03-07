@@ -3,7 +3,8 @@ import { errorhandling } from '../middleware/all_error.js'
 import { sendUserOtpMail } from '../mail/mail.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import {validName} from '../validation/allvalidation.js'
+import { validName } from '../validation/allvalidation.js'
+import { uploadProfileImg, deleteProfileImg } from '../image/Image.js'
 
 export const create_user = async (req, res) => {
     try {
@@ -96,8 +97,10 @@ export const user_log_in = async (req, res) => {
         if (!comparePasswod) return res.status(400).send({ status: false, msg: "wrong password" })
 
         const token = jwt.sign({ userId: DB._id }, process.env.UserToken, { expiresIn: '1d' })
-        res.status(200).send({ status: true, msg: "Login Successfully", token, 
-            id: DB._id,email:DB.email,img:{asset_id:DB?.profileImg?.asset_id,secure_url:DB?.profileImg?.secure_url} })
+        res.status(200).send({
+            status: true, msg: "Login Successfully", token,
+            id: DB._id, email: DB.email, img: { asset_id: DB?.profileImg?.asset_id, secure_url: DB?.profileImg?.secure_url }
+        })
 
     }
     catch (e) { errorhandling(e, res) }
@@ -133,8 +136,6 @@ export const login_with_google = async (req, res) => {
     catch (e) { errorhandling(e, res) }
 
 }
-
-
 export const updated_profile = async (req, res) => {
     try {
 
@@ -181,23 +182,23 @@ export const change_password = async (req, res) => {
     catch (e) { errorhandling(e, res) }
 
 }
+
 export const change_profile_img = async (req, res) => {
     try {
         const file = req.file
-        const id = req.params.id 
-        
+        const id = req.params.id
+
         const checkUser = await user_model.findById(id)
 
-        if(!checkUser) return res.status(404).send({status:false,msg:"user not found"})
-            
-        if(checkUser?.profileImg?.asset_id){
-            res.send(file)
-        }
-        
+        if (!checkUser) return res.status(404).send({ status: false, msg: "user not found" })
 
-       res.send('not img')
+        if (checkUser?.profileImg?.asset_id) await deleteProfileImg(checkUser?.profileImg?.asset_id)
+
+        const img = await uploadProfileImg(file.path)
+        const DB = await user_model.findByIdAndUpdate(id, { $set: { profileImg: img } }, { new: true })
+
+        res.status(200).send({ status: true, msg: "Profile Image Updated Successfully", DB })
     }
     catch (e) { errorhandling(e, res) }
 
 }
- 

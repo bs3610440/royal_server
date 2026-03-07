@@ -12,6 +12,7 @@ cloudinary.config({
 
 export const uploadProfileImg = async (img) => {
   try {
+    console.log(img)
    const optimizedBuffer = await sharp(img)
             .resize(1080, 720, { fit: 'inside', withoutEnlargement: true })
             .jpeg({ quality: 80, mozjpeg: true }).toBuffer();
@@ -22,6 +23,14 @@ export const uploadProfileImg = async (img) => {
             { resource_type: 'auto', quality: 'auto',  folder: 'course' });
 
     return uploadResult;
+  } 
+  catch (err) {console.log(err.message);}
+};
+
+export const deleteProfileImg = async (AssetsId) => {
+  try {
+    const result = await cloudinary.uploader.destroy(AssetsId);
+    return result
   } 
   catch (err) {console.log(err.message);}
 };
