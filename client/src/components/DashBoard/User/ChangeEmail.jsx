@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function ChangeEmail() {
   return (
-    <div>
+    <div className='bg-pink-300 h-screen'>
       
     </div>
   )

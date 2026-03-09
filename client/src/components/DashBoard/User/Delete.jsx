@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Delete() {
   return (
-    <div>
+    <div className='bg-red-900 h-screen'>
       
     </div>
   )

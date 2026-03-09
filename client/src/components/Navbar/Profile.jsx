@@ -3,13 +3,13 @@ import { CgProfile, CgLogOut } from "react-icons/cg";
 import { SiGmail } from "react-icons/si";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { FiSettings } from "react-icons/fi";
-
+import {Link} from 'react-router-dom'
 export default function Profile({ dark, setDark }) {
 
     const menuLinks = [
         { name: "Your profile", href: "#", icon: CgProfile },
         { name: "Theme", href: "#", icon: dark ? MdOutlineLightMode : MdOutlineDarkMode, action: () => setDark(!dark) },
-        { name: "Settings", href: "#", icon: FiSettings },
+        { name: "Settings", href: "/dashBoard", icon: FiSettings },
         { name: "Sign out", href: "#", icon: CgLogOut },
     ]
 
@@ -65,8 +65,8 @@ export default function Profile({ dark, setDark }) {
                                         <span className="font-medium">{item.name}</span>
                                     </button>
                                 ) : (
-                                    <a
-                                        href={item.href}
+                                    <Link
+                                        to={item.href}
                                         className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors ${active
                                             ? 'bg-red-50 dark:bg-zinc-800 text-red-600 dark:text-red-400'
                                             : 'text-gray-700 dark:text-gray-300'
@@ -74,7 +74,7 @@ export default function Profile({ dark, setDark }) {
                                     >
                                         <item.icon className="text-lg" />
                                         <span className="font-medium">{item.name}</span>
-                                    </a>
+                                    </Link>
                                 )
                             )}
                         </MenuItem>

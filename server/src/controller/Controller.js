@@ -200,6 +200,5 @@ export const change_profile_img = async (req, res) => {
         res.status(200).send({ status: true, msg: "Profile Image Updated Successfully", DB })
     }
     catch (e) { errorhandling(e, res) }
-
 }
 

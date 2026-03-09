@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function ChnageImg() {
   return (
-    <div>
+    <div className='bg-gray-300 h-screen'>
       
     </div>
   )

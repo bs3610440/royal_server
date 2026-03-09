@@ -9,7 +9,7 @@ import Profile from './Profile';
 import {Link} from 'react-router-dom'
 export default function Navbar() {
   const [dark, setDark] = useState(false);
-  const [login, setLogIn] = useState(false);
+  const [login, setLogIn] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef(null);
