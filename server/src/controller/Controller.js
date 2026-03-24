@@ -99,7 +99,7 @@ export const user_log_in = async (req, res) => {
         const token = jwt.sign({ userId: DB._id }, process.env.UserToken, { expiresIn: '1d' })
         res.status(200).send({
             status: true, msg: "Login Successfully", token,
-            id: DB._id, email: DB.email, img: { asset_id: DB?.profileImg?.asset_id, secure_url: DB?.profileImg?.secure_url }
+            id: DB._id,name: DB.name, email: DB.email, img: { asset_id: DB?.profileImg?.asset_id, secure_url: DB?.profileImg?.secure_url }
         })
 
     }
@@ -181,7 +181,7 @@ export const change_password = async (req, res) => {
     }
     catch (e) { errorhandling(e, res) }
 
-}
+} 
 
 export const change_profile_img = async (req, res) => {
     try {
@@ -202,3 +202,4 @@ export const change_profile_img = async (req, res) => {
     catch (e) { errorhandling(e, res) }
 }
 
+ 

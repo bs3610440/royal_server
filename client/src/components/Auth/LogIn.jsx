@@ -15,8 +15,11 @@ import { validationLoginSchema } from '../Validation/AllValidation';
 import { LocalUrl } from '../../GlobalUrl'
 import { useNavigate } from 'react-router-dom'
 import { showErrorToast, showSuccessToast } from '../Notification/ToastNofication'
+import {useAuth} from '../../context/AllContext'
 
 const Login = () => {
+
+  const {setLogIn,setProfile} = useAuth()
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -27,12 +30,15 @@ const Login = () => {
       setIsSubmitting(true);
 
       try {
+       
         const response = await axios.post(`${LocalUrl}user_log_in`, values)
 
         if (response.status == 200) {
           showSuccessToast(response?.data?.msg || 'Sucessfully log In')
           localStorage.setItem('userId', response?.data?.id)
           localStorage.setItem('userToken', response?.data?.token)
+          setProfile({name:response?.data?.name,email:response?.data?.email,profileImg:response?.data?.profileImg})
+           setLogIn(true)
           navigate(`/`)
         }
       }

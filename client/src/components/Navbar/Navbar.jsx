@@ -6,13 +6,17 @@ import { MdLocalMovies } from "react-icons/md";
 import { GiTv } from "react-icons/gi";
 import { HiMenuAlt3 } from "react-icons/hi";
 import Profile from './Profile';
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import {useAuth} from '../../context/AllContext'
+
 export default function Navbar() {
   const [dark, setDark] = useState(false);
-  const [login, setLogIn] = useState(true);
+  const {login} = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef(null);
+
+  console.log(login)
 
   const MenuData = [
     { icon: FaFilm, name: "Bollywood", link: "/bollywood-movies" },
@@ -163,7 +167,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-3">
               {
                 Auth.map(({ name, link, css }, index) => (
-                  <Link to={link}>
+                  <Link to={link} key={index}>
                     <button className={css}>
                       {name}
                     </button>
@@ -187,7 +191,7 @@ export default function Navbar() {
             className="lg:hidden bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-700 shadow-lg"
           >
             <div className="px-4 py-3 space-y-1">
-             
+
               {MenuData.map((item) => (
                 item.dropdown ? (
                   <div key={item.name} className="space-y-1">
@@ -220,18 +224,18 @@ export default function Navbar() {
                 )
               ))}
 
-               <div className="md:hidden flex justify-center text-white items-center gap-3">
-              {
-                Auth.map(({ name, link, css }, index) => (
-                  <Link to={link}>
-                    <button className={css}>
-                      {name}
-                    </button>
-                  </Link>
-                ))
-              }
+              <div className="md:hidden flex justify-center text-white items-center gap-3">
+                {
+                  Auth.map(({ name, link, css }, index) => (
+                    <Link to={link}>
+                      <button className={css}>
+                        {name}
+                      </button>
+                    </Link>
+                  ))
+                }
 
-            </div>
+              </div>
             </div>
           </motion.div>
         )}

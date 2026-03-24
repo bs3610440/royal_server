@@ -20,12 +20,3 @@ mongoose.connect(process.env.MongoDB)
 app.use('/',routes)
 
 app.listen(PORT,()=>console.log(`server is running port => ${PORT}`))
-
-
-
-
-
-
-
-
-

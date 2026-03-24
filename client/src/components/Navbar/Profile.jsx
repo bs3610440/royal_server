@@ -3,25 +3,36 @@ import { CgProfile, CgLogOut } from "react-icons/cg";
 import { SiGmail } from "react-icons/si";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { FiSettings } from "react-icons/fi";
-import {Link} from 'react-router-dom'
+import { useAuth } from '../../context/AllContext'
+import { Link, useNavigate } from 'react-router-dom'
 export default function Profile({ dark, setDark }) {
-
+    const { setLogIn, profile } = useAuth();
+   
+    const navigate = useNavigate();
     const menuLinks = [
         { name: "Your profile", href: "#", icon: CgProfile },
         { name: "Theme", href: "#", icon: dark ? MdOutlineLightMode : MdOutlineDarkMode, action: () => setDark(!dark) },
         { name: "Settings", href: "/dashBoard", icon: FiSettings },
-        { name: "Sign out", href: "#", icon: CgLogOut },
+        { name: "Sign out", href: "#", icon: CgLogOut, action: () => { setLogIn(false); localStorage.removeItem("token"); navigate("/user-login"); } },
     ]
+
+
 
     return (
         <div>
             <Menu as="div" className="relative ml-3">
                 <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 hover:ring-2 hover:ring-red-500/50 transition-all">
-                    <img
-                        alt="Profile"
-                        src="https://res.cloudinary.com/ddmoaju5a/image/upload/v1766227641/students/osacrruvobbinbtnczt0.jpg"
-                        className="size-10 rounded-full bg-gray-800 ring-2 ring-red-600/30 hover:ring-red-600/70 transition-all duration-300"
-                    />
+                    {
+                        profile.profileImg ?
+                            <img
+                                alt="Profile"
+                                src={profile?.profileImg?.secure_url}
+                                className="size-10 rounded-full bg-gray-800 ring-2 ring-red-600/30 hover:ring-red-600/70 transition-all duration-300"
+                            /> :
+                            profile?.name?.toUpperCase() || 'R'
+                    }
+
+
                 </MenuButton>
 
                 <MenuItems
@@ -35,7 +46,7 @@ export default function Profile({ dark, setDark }) {
                                 <CgProfile className="text-red-600 dark:text-red-400 text-lg" />
                             </div>
                             <div>
-                                <h1 className="font-semibold text-gray-900 dark:text-white">John Doe</h1>
+                                <h1 className="font-semibold text-gray-900 dark:text-white">{profile.name || 'John Doe'}</h1>
                                 <p className="text-xs text-gray-500 dark:text-gray-400">Premium Member</p>
                             </div>
                         </div>
@@ -44,12 +55,12 @@ export default function Profile({ dark, setDark }) {
                                 <SiGmail className="text-blue-600 dark:text-blue-400 text-lg" />
                             </div>
                             <div>
-                                <h1 className="text-sm text-gray-700 dark:text-gray-300">john.doe@gmail.com</h1>
+                                <h1 className="text-sm text-gray-700 dark:text-gray-300">{profile.email || 'john.doe@gmail.com'}</h1>
                             </div>
                         </div>
                     </div>
 
-                    {/* Menu Links */}
+                    {/* Menu Items */}
                     {menuLinks.map((item, index) => (
                         <MenuItem key={index}>
                             {({ active }) => (
@@ -57,8 +68,8 @@ export default function Profile({ dark, setDark }) {
                                     <button
                                         onClick={item.action}
                                         className={`flex items-center gap-3 w-full px-4 py-3 text-sm transition-colors ${active
-                                            ? 'bg-red-50 dark:bg-zinc-800 text-red-600 dark:text-red-400'
-                                            : 'text-gray-700 dark:text-gray-300'
+                                                ? 'bg-red-50 dark:bg-zinc-800 text-red-600 dark:text-red-400'
+                                                : 'text-gray-700 dark:text-gray-300'
                                             }`}
                                     >
                                         <item.icon className="text-lg" />
@@ -68,8 +79,8 @@ export default function Profile({ dark, setDark }) {
                                     <Link
                                         to={item.href}
                                         className={`flex items-center gap-3 px-4 py-3 text-sm transition-colors ${active
-                                            ? 'bg-red-50 dark:bg-zinc-800 text-red-600 dark:text-red-400'
-                                            : 'text-gray-700 dark:text-gray-300'
+                                                ? 'bg-red-50 dark:bg-zinc-800 text-red-600 dark:text-red-400'
+                                                : 'text-gray-700 dark:text-gray-300'
                                             }`}
                                     >
                                         <item.icon className="text-lg" />
