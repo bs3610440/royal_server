@@ -188,6 +188,8 @@ export const change_profile_img = async (req, res) => {
         const file = req.file
         const id = req.params.id
 
+        console.log(file)
+
         const checkUser = await user_model.findById(id)
 
         if (!checkUser) return res.status(404).send({ status: false, msg: "user not found" })
