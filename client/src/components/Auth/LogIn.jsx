@@ -37,9 +37,8 @@ const Login = () => {
           showSuccessToast(response?.data?.msg || 'Sucessfully log In')
           localStorage.setItem('userId', response?.data?.id)
           localStorage.setItem('userToken', response?.data?.token)
-          console.log({name:response?.data?.name,email:response?.data?.email,profileImg:response?.data?.img})
           setProfile({name:response?.data?.name,email:response?.data?.email,profileImg:response?.data?.img})
-           setLogIn(true)
+          setLogIn(true)
           navigate(`/`)
         }
       }

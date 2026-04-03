@@ -16,7 +16,7 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef(null);
 
-  console.log(login)
+ 
 
   const MenuData = [
     { icon: FaFilm, name: "Bollywood", link: "/bollywood-movies" },

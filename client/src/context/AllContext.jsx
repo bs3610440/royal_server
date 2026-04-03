@@ -13,7 +13,7 @@ export function AuthProvider({ children }) {
 
   const [login, setLogIn] = useState(false);
   const [profile, setProfile] = useState({})
-
+  
   const value = { login, setLogIn, profile, setProfile }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
