@@ -16,6 +16,14 @@ routes.put('/updated_profile/:id', user_authorization, updated_profile)
 routes.delete('/delete_profile/:id',user_authorization, delete_profile)
 routes.put('/change_profile_img/:id',user_authorization,upload.single('profileImg'), change_profile_img)
 
+
+// product model
+import{create_product} from '../controller/product_controller.js'
+
+routes.post('/create_product',upload.fields([
+    { name: 'poster', maxCount: 1 },
+    { name: 'images', maxCount: 10 },]) ,create_product) 
+
 // Admin API's
 import { admin_log_in, get_all_user } from '../controller/admin_controller.js'
 import { authentication, authorization } from '../middleware/admin_auth.js'
