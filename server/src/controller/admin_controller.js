@@ -27,7 +27,7 @@ export const admin_log_in = async (req, res) => {
 
         if (!comparePasswod) return res.status(400).send({ status: false, msg: "wrong password" })
 
-        const token = jwt.sign({ userId: DB._id }, process.env.AdminToken, { expiresIn: '1d' })
+        const token = jwt.sign({ adminId: DB._id }, process.env.AdminToken, { expiresIn: '1d' })
         res.status(200).send({ status: true, msg: "Login Successfully", token, id: DB._id })
 
     }
